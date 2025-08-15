@@ -6,7 +6,6 @@ import com.noteric.health.dto.TestResultDto;
 import com.noteric.health.model.DietPlan;
 import com.noteric.health.model.Report;
 import com.noteric.health.model.User;
-import com.noteric.health.model.TestResult;
 import com.noteric.health.repository.DietPlanRepository;
 import com.noteric.health.repository.HealthTrendRepository;
 import com.noteric.health.repository.ReportRepository;
@@ -42,8 +41,11 @@ public class DashboardService {
                 .collect(Collectors.toList());
 
         String latestDietPlan = reportRepo.findByUser(user).stream()
+                .filter(r -> r.getCreatedAt() != null)
                 .max(Comparator.comparing(Report::getCreatedAt))
-                .flatMap(r -> dietPlanRepo.findByReport(r))
+                .flatMap(r -> dietPlanRepo.findByReport(r).stream()
+                        .filter(dp -> dp.getCreatedAt() != null)
+                        .max(Comparator.comparing(DietPlan::getCreatedAt)))
                 .map(DietPlan::getGeneratedPlan)
                 .orElse(null);
 

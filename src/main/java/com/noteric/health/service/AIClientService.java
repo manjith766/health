@@ -19,10 +19,10 @@ public class AIClientService {
     @Value("${ollama.url:http://localhost:11434}")
     private String ollamaUrl;
 
-    @Value("${ollama.model:tinyllama}")
+    @Value("${ollama.model:llama3}")
     private String model;
 
-    @Value("${ollama.timeout:60}")
+    @Value("${ollama.timeout:180}")  // timeout in seconds
     private int timeoutSeconds;
 
     public String generateDietPlan(String prompt) {
